@@ -1400,12 +1400,25 @@ public class Fetcher<K, V> implements Closeable {
         }
     }
 
+    private RecordParser<K, V> parser;
+
+    public void setParser(RecordParser<K, V> parser) {
+        this.parser = parser;
+    }
+
     /**
      * Parse the record entry, deserializing the key / value fields if necessary
      */
     private ConsumerRecord<K, V> parseRecord(TopicPartition partition,
                                              RecordBatch batch,
                                              Record record) {
+        if (parser != null) {
+            ConsumerRecord<K, V> result = parser.parseRecord(partition, batch, record);
+            if (result != null) {
+                return result;
+            }
+        }
+
         try {
             long offset = record.offset();
             long timestamp = record.timestamp();

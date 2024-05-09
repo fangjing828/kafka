@@ -863,6 +863,10 @@ public class KafkaConsumer<K, V> implements Consumer<K, V> {
         this.kafkaConsumerMetrics = new KafkaConsumerMetrics(metrics, "consumer");
     }
 
+    public Fetcher<K, V> getFetcher() {
+        return fetcher;
+    }
+
     private static Metrics buildMetrics(ConsumerConfig config, Time time, String clientId) {
         Map<String, String> metricsTags = Collections.singletonMap(CLIENT_ID_METRIC_TAG, clientId);
         MetricConfig metricConfig = new MetricConfig().samples(config.getInt(ConsumerConfig.METRICS_NUM_SAMPLES_CONFIG))
